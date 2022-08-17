@@ -4,9 +4,8 @@ import (
 	"context"
 	"demo/common/errorx"
 	"demo/service/account/model"
-	"demo/service/account/rpc/pb/account"
-
 	"demo/service/account/rpc/internal/svc"
+	"demo/service/account/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +24,7 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 	}
 }
 
-func (l *LoginLogic) Login(in *account.LoginRequest) (*account.LoginResponse, error) {
+func (l *LoginLogic) Login(in *pb.LoginRequest) (*pb.LoginResponse, error) {
 	user, err := l.svcCtx.UserModel.FindOneByName(l.ctx, in.Name)
 	switch err {
 	case nil:
@@ -37,7 +36,7 @@ func (l *LoginLogic) Login(in *account.LoginRequest) (*account.LoginResponse, er
 	if user.Password != in.Password {
 		return nil, errorx.NewDefaultError("密码错误")
 	}
-	return &account.LoginResponse{
+	return &pb.LoginResponse{
 		UserId: user.Id,
 	}, nil
 }

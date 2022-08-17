@@ -5,15 +5,15 @@ package server
 
 import (
 	"context"
+	"demo/service/account/rpc/pb"
 
 	"demo/service/account/rpc/internal/logic"
 	"demo/service/account/rpc/internal/svc"
-	"demo/service/account/rpc/pb/account"
 )
 
 type AccountServer struct {
 	svcCtx *svc.ServiceContext
-	account.UnimplementedAccountServer
+	pb.UnimplementedAccountServer
 }
 
 func NewAccountServer(svcCtx *svc.ServiceContext) *AccountServer {
@@ -22,7 +22,7 @@ func NewAccountServer(svcCtx *svc.ServiceContext) *AccountServer {
 	}
 }
 
-func (s *AccountServer) Login(ctx context.Context, in *account.LoginRequest) (*account.LoginResponse, error) {
+func (s *AccountServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResponse, error) {
 	l := logic.NewLoginLogic(ctx, s.svcCtx)
 	return l.Login(in)
 }

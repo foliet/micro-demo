@@ -1,7 +1,7 @@
 package main
 
 import (
-	"demo/service/account/rpc/pb/account"
+	"demo/service/account/rpc/pb"
 	"flag"
 	"fmt"
 
@@ -26,7 +26,7 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		account.RegisterAccountServer(grpcServer, server.NewAccountServer(ctx))
+		pb.RegisterAccountServer(grpcServer, server.NewAccountServer(ctx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)

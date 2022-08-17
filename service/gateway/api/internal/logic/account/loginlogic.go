@@ -2,7 +2,7 @@ package account
 
 import (
 	"context"
-	"demo/service/account/rpc/pb/account"
+	"demo/service/account/rpc/pb"
 	"demo/service/gateway/api/internal/svc"
 	"demo/service/gateway/api/internal/types"
 	"github.com/golang-jwt/jwt/v4"
@@ -27,7 +27,7 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 
 func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.LoginResponse, err error) {
 	resp = new(types.LoginResponse)
-	rpcResp, err := l.svcCtx.AccountRpc.Login(l.ctx, &account.LoginRequest{
+	rpcResp, err := l.svcCtx.AccountRpc.Login(l.ctx, &pb.LoginRequest{
 		Name:     req.Name,
 		Password: req.Password,
 	})

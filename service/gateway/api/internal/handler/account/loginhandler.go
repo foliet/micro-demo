@@ -1,9 +1,9 @@
 package account
 
 import (
-	"demo/service/gateway/internal/logic/account"
-	"demo/service/gateway/internal/svc"
-	"demo/service/gateway/internal/types"
+	"demo/service/gateway/api/internal/logic/account"
+	"demo/service/gateway/api/internal/svc"
+	"demo/service/gateway/api/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 )

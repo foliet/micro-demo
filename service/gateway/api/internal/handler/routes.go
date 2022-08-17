@@ -2,10 +2,9 @@
 package handler
 
 import (
+	account2 "demo/service/gateway/api/internal/handler/account"
+	"demo/service/gateway/api/internal/svc"
 	"net/http"
-
-	account "demo/service/gateway/internal/handler/account"
-	"demo/service/gateway/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )
@@ -16,7 +15,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodPost,
 				Path:    "/login",
-				Handler: account.LoginHandler(serverCtx),
+				Handler: account2.LoginHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/account"),
@@ -27,7 +26,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodPost,
 				Path:    "/logout",
-				Handler: account.LogoutHandler(serverCtx),
+				Handler: account2.LogoutHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),

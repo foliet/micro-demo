@@ -1,10 +1,10 @@
 package account
 
 import (
+	"demo/service/gateway/api/internal/logic/account"
+	"demo/service/gateway/api/internal/svc"
 	"net/http"
 
-	"demo/service/gateway/internal/logic/account"
-	"demo/service/gateway/internal/svc"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 

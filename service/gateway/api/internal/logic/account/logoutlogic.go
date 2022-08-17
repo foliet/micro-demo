@@ -2,8 +2,7 @@ package account
 
 import (
 	"context"
-
-	"demo/service/gateway/internal/svc"
+	"demo/service/gateway/api/internal/svc"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 

@@ -3,11 +3,10 @@ package account
 import (
 	"context"
 	"demo/service/account/rpc/pb/account"
+	"demo/service/gateway/api/internal/svc"
+	"demo/service/gateway/api/internal/types"
 	"github.com/golang-jwt/jwt/v4"
 	"time"
-
-	"demo/service/gateway/internal/svc"
-	"demo/service/gateway/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

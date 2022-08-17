@@ -2,7 +2,7 @@ package svc
 
 import (
 	"demo/service/account/rpc/accountclient"
-	"demo/service/gateway/internal/config"
+	"demo/service/gateway/api/internal/config"
 	"github.com/zeromicro/go-zero/zrpc"
 )
 

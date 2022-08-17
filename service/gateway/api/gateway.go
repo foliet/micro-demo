@@ -2,9 +2,9 @@ package main
 
 import (
 	"demo/common/errorx"
-	"demo/service/gateway/internal/config"
-	"demo/service/gateway/internal/handler"
-	"demo/service/gateway/internal/svc"
+	"demo/service/gateway/api/internal/config"
+	"demo/service/gateway/api/internal/handler"
+	"demo/service/gateway/api/internal/svc"
 	"flag"
 	"fmt"
 	"github.com/zeromicro/go-zero/rest/httpx"

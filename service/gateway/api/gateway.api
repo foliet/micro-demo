@@ -8,5 +8,5 @@ info(
 	version: "type version here"
 )
 
-import "account/account.api"
-import "item/item.api"
+import "api/account/account.api"
+import "api/item/item.api"

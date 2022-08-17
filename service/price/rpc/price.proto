@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package item;
+
+option go_package='./pb';
+
+message SubscribeRequest {
+  int64 UserId = 1;
+}
+
+message SubscribeResponse {
+  repeated int64 ItemId = 1;
+}
+
+service Item {
+  rpc getSubscribe(SubscribeRequest) returns (SubscribeResponse);
+}

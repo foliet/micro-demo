@@ -9,4 +9,4 @@ info(
 )
 
 import "api/account/account.api"
-import "api/item/item.api"
+import "api/price/price.api"

@@ -1,0 +1,4 @@
+Name: account.rpc
+ListenOn: 127.0.0.1:8080
+Mysql:
+  Datasource: root:Fqh66545896.@tcp(sh-cynosdbmysql-grp-ifioqjko.sql.tencentcdb.com:29987)/demo?parseTime=true

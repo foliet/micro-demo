@@ -1,0 +1,9 @@
+Name: gateway
+Host: 0.0.0.0
+Port: 8888
+Auth:
+  AccessSecret: ad879037-c7a4-4063-9236-6bfc35d54b7d
+  AccessExpire: 86400
+AccountRpc:
+  Endpoints:
+    - 127.0.0.1:8080

@@ -1,0 +1,28 @@
+type LoginRequest {
+    Name string `json:"name"`
+    Password string `json:"password"`
+}
+
+type LoginResponse {
+    AccessToken string `json:"accessToken"`
+    AccessExpire int64 `json:"accessExpire"`
+}
+
+@server(
+    group: account
+    prefix: /api/account
+)
+service gateway {
+    @handler login
+    post /login (LoginRequest) returns (LoginResponse)
+}
+@server (
+    jwt: Auth
+    group: account
+    prefix: /api/account
+)
+service gateway {
+    @handler logout
+    post /logout
+}
+

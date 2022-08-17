@@ -16,13 +16,3 @@ service gateway {
     @handler login
     post /login (LoginRequest) returns (LoginResponse)
 }
-@server (
-    jwt: Auth
-    group: account
-    prefix: /api/account
-)
-service gateway {
-    @handler logout
-    post /logout
-}
-

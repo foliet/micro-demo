@@ -6,6 +6,8 @@ import (
 	"demo/service/account/model/sql"
 	"demo/service/account/rpc/internal/svc"
 	"demo/service/account/rpc/pb"
+	"github.com/go-sql-driver/mysql"
+	"google.golang.org/grpc/codes"
 
 	"github.com/zeromicro/go-zero/core/logx"
 	"golang.org/x/crypto/bcrypt"
@@ -29,20 +31,17 @@ func (l *RegisterLogic) Register(in *pb.RegisterRequest) (*pb.UserId, error) {
 	if in.Code != "1234" {
 		return nil, errorx.NewDefaultError("wrong verification code")
 	}
-	_, err := l.svcCtx.UserModel.FindOneByName(l.ctx, in.Name)
-	switch err {
-	case nil:
-		return nil, errorx.NewDefaultError("not found user")
-	case sql.ErrNotFound:
-	default:
-		return nil, err
-	}
 	hashPassword, err := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.DefaultCost)
 	result, err := l.svcCtx.UserModel.Insert(l.ctx, &sql.User{
 		Name:     in.Name,
 		Password: string(hashPassword),
 	})
-	if err != nil {
+	switch e := err.(type) {
+	case *mysql.MySQLError:
+		if e.Number == 1062 {
+			return nil, errorx.NewCodeError(codes.Code(e.Number), "name had been registered")
+		}
+	default:
 		return nil, err
 	}
 	id, err := result.LastInsertId()

@@ -3,7 +3,7 @@ package logic
 import (
 	"context"
 	"demo/common/errorx"
-	"demo/service/account/model"
+	"demo/service/account/model/sql"
 	"demo/service/account/rpc/internal/svc"
 	"demo/service/account/rpc/pb"
 
@@ -28,7 +28,7 @@ func (l *LoginLogic) Login(in *pb.LoginRequest) (*pb.LoginResponse, error) {
 	user, err := l.svcCtx.UserModel.FindOneByName(l.ctx, in.Name)
 	switch err {
 	case nil:
-	case model.ErrNotFound:
+	case sql.ErrNotFound:
 		return nil, errorx.NewDefaultError("not found user")
 	default:
 		return nil, err

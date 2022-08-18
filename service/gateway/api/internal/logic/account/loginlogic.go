@@ -34,21 +34,21 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.LoginResponse, 
 	if err != nil {
 		return nil, err
 	}
-	resp.AccessToken, resp.AccessExpire, err = l.getJwtToken(rpcResp.GetUserId())
+	auth := l.svcCtx.Config.Auth
+	resp.AccessToken, resp.AccessExpire, err = getJwtToken(rpcResp.GetId(), auth.AccessSecret, auth.AccessExpire)
 	return
 }
 
-func (l *LoginLogic) getJwtToken(userId int64) (string, int64, error) {
-	auth := l.svcCtx.Config.Auth
+func getJwtToken(userId int64, secret string, expire int64) (string, int64, error) {
 	iat := time.Now().Unix()
-	exp := iat + auth.AccessExpire
+	exp := iat + expire
 	claims := make(jwt.MapClaims)
 	claims["exp"] = exp
 	claims["iat"] = iat
 	claims["userId"] = userId
 	token := jwt.New(jwt.SigningMethodHS256)
 	token.Claims = claims
-	tokenString, err := token.SignedString([]byte(auth.AccessSecret))
+	tokenString, err := token.SignedString([]byte(secret))
 	if err != nil {
 		return "", 0, err
 	}

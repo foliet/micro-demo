@@ -10,3 +10,14 @@ type LoginResponse struct {
 	AccessToken  string `json:"accessToken"`
 	AccessExpire int64  `json:"accessExpire"`
 }
+
+type RegisterRequest struct {
+	Name     string `json:"name"`
+	Password string `json:"password"`
+	Code     string `json:"code"`
+}
+
+type RegisterResponse struct {
+	AccessToken  string `json:"accessToken"`
+	AccessExpire int64  `json:"accessExpire"`
+}

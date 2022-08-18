@@ -5,6 +5,7 @@ package account
 
 import (
 	"context"
+
 	"demo/service/account/rpc/pb"
 
 	"github.com/zeromicro/go-zero/zrpc"
@@ -12,11 +13,13 @@ import (
 )
 
 type (
-	LoginRequest  = pb.LoginRequest
-	LoginResponse = pb.LoginResponse
+	LoginRequest    = pb.LoginRequest
+	RegisterRequest = pb.RegisterRequest
+	UserId          = pb.UserId
 
 	Account interface {
-		Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+		Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*UserId, error)
+		Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*UserId, error)
 	}
 
 	defaultAccount struct {
@@ -30,7 +33,12 @@ func NewAccount(cli zrpc.Client) Account {
 	}
 }
 
-func (m *defaultAccount) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+func (m *defaultAccount) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*UserId, error) {
 	client := pb.NewAccountClient(m.cli.Conn())
 	return client.Login(ctx, in, opts...)
+}
+
+func (m *defaultAccount) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*UserId, error) {
+	client := pb.NewAccountClient(m.cli.Conn())
+	return client.Register(ctx, in, opts...)
 }

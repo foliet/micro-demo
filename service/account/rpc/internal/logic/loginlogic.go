@@ -6,6 +6,7 @@ import (
 	"demo/service/account/model/sql"
 	"demo/service/account/rpc/internal/svc"
 	"demo/service/account/rpc/pb"
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,7 +25,7 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 	}
 }
 
-func (l *LoginLogic) Login(in *pb.LoginRequest) (*pb.LoginResponse, error) {
+func (l *LoginLogic) Login(in *pb.LoginRequest) (*pb.UserId, error) {
 	user, err := l.svcCtx.UserModel.FindOneByName(l.ctx, in.Name)
 	switch err {
 	case nil:
@@ -33,10 +34,11 @@ func (l *LoginLogic) Login(in *pb.LoginRequest) (*pb.LoginResponse, error) {
 	default:
 		return nil, err
 	}
-	if user.Password != in.Password {
+
+	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(in.Password)) != nil {
 		return nil, errorx.NewDefaultError("wrong password")
 	}
-	return &pb.LoginResponse{
-		UserId: user.Id,
+	return &pb.UserId{
+		Id: user.Id,
 	}, nil
 }

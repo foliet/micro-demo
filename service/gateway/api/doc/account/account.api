@@ -8,6 +8,17 @@ type LoginResponse {
     AccessExpire int64 `json:"accessExpire"`
 }
 
+type RegisterRequest {
+    Name string `json:"name"`
+    Password string `json:"password"`
+    Code string `json:"code"`
+}
+
+type RegisterResponse {
+    AccessToken string `json:"accessToken"`
+    AccessExpire int64 `json:"accessExpire"`
+}
+
 @server(
     group: account
     prefix: /api/account
@@ -15,4 +26,6 @@ type LoginResponse {
 service gateway {
     @handler login
     post /login (LoginRequest) returns (LoginResponse)
+    @handler register
+    post /register (RegisterRequest) returns (RegisterResponse)
 }

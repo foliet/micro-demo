@@ -1,0 +1,25 @@
+type Item {
+    ItemId string `json:"itemId"`
+    ShopId string `json:"shopId,optional"`
+}
+
+type ItemInfo {
+    ItemId  string `json:"itemId"`
+    Price   float32 `json:"price"`
+}
+
+type ItemInfos {
+    ItemInfos []ItemInfo `json:"itemInfos"`
+}
+
+@server (
+    jwt: Auth
+    group: price
+    prefix: /api/price
+)
+service gateway {
+    @handler subscribe
+    post /subscribe (Item)
+    @handler itemInfo
+    get /iteminfo returns (ItemInfos)
+}

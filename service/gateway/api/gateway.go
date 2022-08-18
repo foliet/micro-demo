@@ -30,8 +30,8 @@ func main() {
 	handler.RegisterHandlers(server, ctx)
 	httpx.SetErrorHandler(func(err error) (int, interface{}) {
 		statusError, ok := status.FromError(err)
-		if !ok {
-			err = errorx.NewDefaultError(err.Error())
+		if !ok || statusError.Code() < 1000 {
+			return http.StatusInternalServerError, nil
 		}
 		statusError = status.Convert(err)
 		return http.StatusOK, &errorx.ErrorResponse{

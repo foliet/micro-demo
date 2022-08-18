@@ -13,5 +13,5 @@ type ErrorResponse struct {
 }
 
 func NewDefaultError(msg string) error {
-	return status.Error(defaultCode, msg)
+	return status.Error(defaultCode, "error: "+msg)
 }

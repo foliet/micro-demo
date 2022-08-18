@@ -29,12 +29,12 @@ func (l *LoginLogic) Login(in *pb.LoginRequest) (*pb.LoginResponse, error) {
 	switch err {
 	case nil:
 	case model.ErrNotFound:
-		return nil, errorx.NewDefaultError("用户名不存在")
+		return nil, errorx.NewDefaultError("not found user")
 	default:
 		return nil, err
 	}
 	if user.Password != in.Password {
-		return nil, errorx.NewDefaultError("密码错误")
+		return nil, errorx.NewDefaultError("wrong password")
 	}
 	return &pb.LoginResponse{
 		UserId: user.Id,

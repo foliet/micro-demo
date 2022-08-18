@@ -1,17 +1,32 @@
 syntax = "proto3";
 
-package item;
+package price;
 
 option go_package='./pb';
 
+message Empty{}
+
+message UserId {
+  int64 Id = 1;
+}
+
 message SubscribeRequest {
   int64 UserId = 1;
+  int64 ItemId = 2;
+  int64 ShopId = 3;
 }
 
-message SubscribeResponse {
-  repeated int64 ItemId = 1;
+message ItemInfo {
+  int64 ItemId = 1;
+  int64 CreateAt = 2;
+  double Price = 3;
 }
 
-service Item {
-  rpc getSubscribe(SubscribeRequest) returns (SubscribeResponse);
+message ItemInfos {
+  repeated ItemInfo ItemInfos = 1;
+}
+
+service Price {
+  rpc subscribe(SubscribeRequest) returns (Empty);
+  rpc itemInfo(UserId) returns (ItemInfos);
 }

@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	account "demo/service/gateway/api/internal/handler/account"
+	price "demo/service/gateway/api/internal/handler/price"
 	"demo/service/gateway/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -25,5 +26,22 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/api/account"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/subscribe",
+				Handler: price.SubscribeHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/iteminfo",
+				Handler: price.ItemInfoHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/price"),
 	)
 }

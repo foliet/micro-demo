@@ -21,3 +21,18 @@ type RegisterResponse struct {
 	AccessToken  string `json:"accessToken"`
 	AccessExpire int64  `json:"accessExpire"`
 }
+
+type Item struct {
+	ItemId int64 `json:"itemId"`
+	ShopId int64 `json:"shopId,optional"`
+}
+
+type ItemInfo struct {
+	ItemId   int64   `json:"itemId"`
+	CreateAt int64   `json:"createAt"`
+	Price    float64 `json:"price"`
+}
+
+type ItemInfos struct {
+	ItemInfos []*ItemInfo `json:"itemInfos"`
+}

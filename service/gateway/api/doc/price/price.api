@@ -1,15 +1,16 @@
 type Item {
-    ItemId string `json:"itemId"`
-    ShopId string `json:"shopId,optional"`
+    ItemId int64 `json:"itemId"`
+    ShopId int64 `json:"shopId,optional"`
 }
 
 type ItemInfo {
-    ItemId  string `json:"itemId"`
-    Price   float32 `json:"price"`
+    ItemId  int64   `json:"itemId"`
+    CreateAt int64  `json:"createAt"`
+    Price   float64 `json:"price"`
 }
 
 type ItemInfos {
-    ItemInfos []ItemInfo `json:"itemInfos"`
+    ItemInfos []*ItemInfo `json:"itemInfos"`
 }
 
 @server (

@@ -7,6 +7,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/stores/builder"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
@@ -25,6 +26,7 @@ type (
 	subscribeModel interface {
 		Insert(ctx context.Context, data *Subscribe) (sql.Result, error)
 		FindOne(ctx context.Context, id int64) (*Subscribe, error)
+		FindOneByUserIdItemId(ctx context.Context, userId int64, itemId int64) (*Subscribe, error)
 		Update(ctx context.Context, data *Subscribe) error
 		Delete(ctx context.Context, id int64) error
 	}
@@ -35,10 +37,11 @@ type (
 	}
 
 	Subscribe struct {
-		Id     int64 `db:"id"`
-		UserId int64 `db:"user_id"`
-		ItemId int64 `db:"item_id"`
-		ShopId int64 `db:"shop_id"`
+		Id       int64     `db:"id"`
+		CreateAt time.Time `db:"create_at"`
+		UserId   int64     `db:"user_id"`
+		ItemId   int64     `db:"item_id"`
+		ShopId   int64     `db:"shop_id"`
 	}
 )
 
@@ -69,15 +72,29 @@ func (m *defaultSubscribeModel) FindOne(ctx context.Context, id int64) (*Subscri
 	}
 }
 
+func (m *defaultSubscribeModel) FindOneByUserIdItemId(ctx context.Context, userId int64, itemId int64) (*Subscribe, error) {
+	var resp Subscribe
+	query := fmt.Sprintf("select %s from %s where `user_id` = ? and `item_id` = ? limit 1", subscribeRows, m.table)
+	err := m.conn.QueryRowCtx(ctx, &resp, query, userId, itemId)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
 func (m *defaultSubscribeModel) Insert(ctx context.Context, data *Subscribe) (sql.Result, error) {
 	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?)", m.table, subscribeRowsExpectAutoSet)
 	ret, err := m.conn.ExecCtx(ctx, query, data.UserId, data.ItemId, data.ShopId)
 	return ret, err
 }
 
-func (m *defaultSubscribeModel) Update(ctx context.Context, data *Subscribe) error {
+func (m *defaultSubscribeModel) Update(ctx context.Context, newData *Subscribe) error {
 	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, subscribeRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, data.UserId, data.ItemId, data.ShopId, data.Id)
+	_, err := m.conn.ExecCtx(ctx, query, newData.UserId, newData.ItemId, newData.ShopId, newData.Id)
 	return err
 }
 

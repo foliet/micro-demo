@@ -12,4 +12,5 @@ type Config struct {
 		AccessExpire int64
 	}
 	AccountRpc zrpc.RpcClientConf
+	PriceRpc   zrpc.RpcClientConf
 }

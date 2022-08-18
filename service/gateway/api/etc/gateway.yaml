@@ -7,3 +7,6 @@ Auth:
 AccountRpc:
   Endpoints:
     - 127.0.0.1:8080
+PriceRpc:
+  Endpoints:
+    - 127.0.0.1:8081

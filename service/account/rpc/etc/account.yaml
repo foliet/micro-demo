@@ -1,4 +1,10 @@
 Name: account.rpc
 ListenOn: 127.0.0.1:8080
 Mysql:
-  Datasource: root:Fqh66545896.@tcp(sh-cynosdbmysql-grp-ifioqjko.sql.tencentcdb.com:29987)/demo?parseTime=true
+  Datasource: demo:Demo123456@tcp(sh-cynosdbmysql-grp-ifioqjko.sql.tencentcdb.com:29987)/demo?parseTime=true
+Etcd:
+  Hosts:
+    - 127.0.0.1:2379
+  Key: account.rpc
+  User: root
+  Pass: root

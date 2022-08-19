@@ -5,8 +5,17 @@ Auth:
   AccessSecret: ad879037-c7a4-4063-9236-6bfc35d54b7d
   AccessExpire: 86400
 AccountRpc:
-  Endpoints:
-    - 127.0.0.1:8080
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: account.rpc
+    User: root
+    Pass: root
+
 PriceRpc:
-  Endpoints:
-    - 127.0.0.1:8081
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: price.rpc
+    User: root
+    Pass: root

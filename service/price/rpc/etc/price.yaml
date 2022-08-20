@@ -1,7 +1,7 @@
 Name: price.rpc
 ListenOn: 127.0.0.1:8081
 Mysql:
-  Datasource: demo:Demo123456@tcp(sh-cynosdbmysql-grp-ifioqjko.sql.tencentcdb.com:29987)/demo?parseTime=true
+  Datasource: demo:Demo1234@tcp(sh-cynosdbmysql-grp-ifioqjko.sql.tencentcdb.com:29987)/demo?parseTime=true
 Etcd:
   Hosts:
     - 127.0.0.1:2379

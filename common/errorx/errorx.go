@@ -14,11 +14,6 @@ var (
 	ErrDuplicateSubscribe = NewCodeError(1005, "item had been subscribed by the same user")
 )
 
-type ErrorResponse struct {
-	Code codes.Code
-	Msg  string
-}
-
 func NewDefaultError(msg string) error {
 	return status.Error(defaultCode, "error: "+msg)
 }

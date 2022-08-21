@@ -42,3 +42,31 @@ func (m *customSubscribeModel) FindAllByUserId(ctx context.Context, userId int64
 		return nil, err
 	}
 }
+
+func (m *customSubscribeModel) FindUniqueItemId(ctx context.Context) ([]int64, error) {
+	query := fmt.Sprintf("select distinct `item_id` from %s", m.table)
+	var resp []int64
+	err := m.conn.QueryRowsCtx(ctx, &resp, query)
+	switch err {
+	case nil:
+		return resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+func (m *customSubscribeModel) FindUniqueItemIdByUserId(ctx context.Context, userId int64) ([]int64, error) {
+	query := fmt.Sprintf("select distinct `item_id` from %s where `user_id` = ?", m.table)
+	var resp []int64
+	err := m.conn.QueryRowsCtx(ctx, &resp, query, userId)
+	switch err {
+	case nil:
+		return resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}

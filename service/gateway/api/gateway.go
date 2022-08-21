@@ -7,6 +7,7 @@ import (
 	"demo/service/gateway/api/internal/svc"
 	"flag"
 	"fmt"
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"google.golang.org/grpc/status"
 	"net/http"
@@ -29,6 +30,7 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
 	httpx.SetErrorHandler(func(err error) (int, interface{}) {
+		logx.Error(err.Error())
 		statusError, ok := status.FromError(err)
 		if !ok || statusError.Code() < 1000 {
 			return http.StatusInternalServerError, nil

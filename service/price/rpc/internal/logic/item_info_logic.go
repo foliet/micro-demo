@@ -28,7 +28,7 @@ func (l *ItemInfoLogic) ItemInfo(in *pb.UserId) (*pb.ItemInfos, error) {
 	if err != nil {
 		return nil, err
 	}
-	var itemInfos []*pb.ItemInfo
+	itemInfos := make([]*pb.ItemInfo, 0, 4)
 	for _, elm := range prices {
 		itemInfos = append(itemInfos, &pb.ItemInfo{
 			ItemId:   elm.ItemId,

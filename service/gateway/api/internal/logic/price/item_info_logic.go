@@ -26,6 +26,7 @@ func NewItemInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ItemInfo
 
 func (l *ItemInfoLogic) ItemInfo() (resp *types.ItemInfos, err error) {
 	resp = new(types.ItemInfos)
+	resp.ItemInfos = make([]*types.ItemInfo, 0, 4)
 	userId, err := l.ctx.Value("userId").(json.Number).Int64()
 	if err != nil {
 		return nil, err

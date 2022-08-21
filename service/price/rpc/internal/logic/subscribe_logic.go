@@ -7,8 +7,6 @@ import (
 	"demo/service/price/rpc/internal/svc"
 	"demo/service/price/rpc/pb"
 	"github.com/go-sql-driver/mysql"
-	codes "google.golang.org/grpc/codes"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -35,7 +33,7 @@ func (l *SubscribeLogic) Subscribe(in *pb.SubscribeRequest) (*pb.Empty, error) {
 	switch e := err.(type) {
 	case *mysql.MySQLError:
 		if e.Number == 1062 {
-			return nil, errorx.NewCodeError(codes.Code(e.Number), "had been subscribed")
+			return nil, errorx.ErrDuplicateSubscribe
 		}
 	default:
 		return nil, err

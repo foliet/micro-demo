@@ -30,13 +30,13 @@ func (l *LoginLogic) Login(in *pb.LoginRequest) (*pb.UserId, error) {
 	switch err {
 	case nil:
 	case sql.ErrNotFound:
-		return nil, errorx.NewDefaultError("not found user")
+		return nil, errorx.ErrUsernameNotFound
 	default:
 		return nil, err
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(in.Password)) != nil {
-		return nil, errorx.NewDefaultError("wrong password")
+		return nil, errorx.ErrWrongPassword
 	}
 	return &pb.UserId{
 		Id: user.Id,

@@ -7,6 +7,13 @@ import (
 
 const defaultCode = 1001
 
+var (
+	ErrWrongPassword      = NewCodeError(1002, "wrong password")
+	ErrUsernameNotFound   = NewCodeError(1003, "username not found")
+	ErrDuplicateUsername  = NewCodeError(1004, "username had been registered")
+	ErrDuplicateSubscribe = NewCodeError(1005, "item had been subscribed by the same user")
+)
+
 type ErrorResponse struct {
 	Code codes.Code
 	Msg  string

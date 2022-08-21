@@ -24,7 +24,7 @@ type RegisterResponse struct {
 
 type Item struct {
 	ItemId int64 `json:"itemId"`
-	ShopId int64 `json:"shopId,optional"`
+	ShopId int64 `json:"shopId"`
 }
 
 type ItemInfo struct {

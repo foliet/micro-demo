@@ -1,10 +1,10 @@
 package main
 
 import (
-	"demo/common/errorx"
 	"demo/service/gateway/api/internal/config"
 	"demo/service/gateway/api/internal/handler"
 	"demo/service/gateway/api/internal/svc"
+	"demo/service/gateway/api/internal/types"
 	"flag"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -36,8 +36,8 @@ func main() {
 			return http.StatusInternalServerError, nil
 		}
 		statusError = status.Convert(err)
-		return http.StatusOK, &errorx.ErrorResponse{
-			Code: statusError.Code(),
+		return http.StatusOK, &types.ResponseStatus{
+			Code: int64(statusError.Code()),
 			Msg:  statusError.Message(),
 		}
 	})

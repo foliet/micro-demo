@@ -25,7 +25,7 @@ func NewSubscribeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Subscri
 	}
 }
 
-func (l *SubscribeLogic) Subscribe(req *types.Item) error {
+func (l *SubscribeLogic) Subscribe(req *types.SubscribeRequest) error {
 	userId, err := l.ctx.Value("userId").(json.Number).Int64()
 	if err != nil {
 		return err

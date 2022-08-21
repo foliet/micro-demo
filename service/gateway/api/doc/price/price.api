@@ -1,4 +1,4 @@
-type Item {
+type SubscribeRequest {
     ItemId int64 `json:"itemId"`
     ShopId int64 `json:"shopId"`
 }
@@ -9,7 +9,8 @@ type ItemInfo {
     Price   float64 `json:"price"`
 }
 
-type ItemInfos {
+type ItemInfoResponse {
+    ResponseStatus
     ItemInfos []*ItemInfo `json:"itemInfos"`
 }
 
@@ -20,7 +21,7 @@ type ItemInfos {
 )
 service gateway {
     @handler subscribe
-    post /subscribe (Item)
+    post /subscribe (SubscribeRequest) returns (ResponseStatus)
     @handler itemInfo
-    get /iteminfo returns (ItemInfos)
+    get /iteminfo returns (ItemInfoResponse)
 }

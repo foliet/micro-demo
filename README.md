@@ -33,7 +33,7 @@
     │          ├─svc
     │          └─types
     └─price
-        ├─cronjob
+        ├─cron
         ├─model
         │  └─sql
         └─rpc
@@ -46,6 +46,6 @@ service中每一个文件夹都是一个微服务
  - model为数据库模型
  - api为http服务
  - rpc为rpc服务
- - cronjob为定时任务
+ - cron为定时任务
  - rmq为消息队列任务
  - scripts为手动脚本

@@ -14,11 +14,12 @@ type (
 	// and implement the added methods in customItemInfoModel.
 	ItemInfoModel interface {
 		itemInfoModel
-		FindAllByUserIdAndItemId(ctx context.Context, userId int64, itemId int64) ([]*ItemInfo, error)
+		FindAllByUserIdAndItemId(ctx context.Context, page int64, userId int64, itemId int64) ([]*ItemInfo, error)
 	}
 
 	customItemInfoModel struct {
 		*defaultItemInfoModel
+		pageSize int64
 	}
 )
 
@@ -26,11 +27,12 @@ type (
 func NewItemInfoModel(conn sqlx.SqlConn) ItemInfoModel {
 	return &customItemInfoModel{
 		defaultItemInfoModel: newItemInfoModel(conn),
+		pageSize:             20,
 	}
 }
 
-func (m *customItemInfoModel) FindAllByUserIdAndItemId(ctx context.Context, userId int64, itemId int64) ([]*ItemInfo, error) {
-	query := fmt.Sprintf("select %s from item_info where `user_id` = ? and `item_id` = ?", itemInfoRows)
+func (m *customItemInfoModel) FindAllByUserIdAndItemId(ctx context.Context, page int64, userId int64, itemId int64) ([]*ItemInfo, error) {
+	query := fmt.Sprintf("select %s from item_info where `user_id` = ? and `item_id` = ? limit %d offset %d", itemInfoRows, m.pageSize, m.pageSize*page)
 	var resp []*ItemInfo
 	err := m.conn.QueryRowsCtx(ctx, &resp, query, userId, itemId)
 	switch err {

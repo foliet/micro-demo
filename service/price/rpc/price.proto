@@ -6,8 +6,9 @@ option go_package='./pb';
 
 message Empty{}
 
-message UserId {
-  int64 Id = 1;
+message ListSubscribeRequest {
+  int64 UserId = 1;
+  int64 Page = 2;
 }
 
 message Subscribe {
@@ -16,7 +17,11 @@ message Subscribe {
   int64 ShopId = 3;
 }
 
-message Subscribes {
+message AddSubscribeRequest {
+  Subscribe subscribe = 1;
+}
+
+message ListSubscribeResponse {
   repeated Subscribe Subscribes = 1;
 }
 
@@ -26,12 +31,17 @@ message ItemInfo {
   double Price = 3;
 }
 
-message ItemInfos {
+message QuerySubscribeResponse {
   repeated ItemInfo ItemInfos = 1;
 }
 
+message QuerySubscribeRequest {
+  Subscribe subscribe = 1;
+  int64 Page = 2;
+}
+
 service Price {
-  rpc addSubscribe(Subscribe) returns (Empty);
-  rpc listSubscribe(UserId) returns (Subscribes);
-  rpc querySubscribe(Subscribe) returns (ItemInfos);
+  rpc addSubscribe(AddSubscribeRequest) returns (Empty);
+  rpc listSubscribe(ListSubscribeRequest) returns (ListSubscribeResponse);
+  rpc querySubscribe(QuerySubscribeRequest) returns (QuerySubscribeResponse);
 }

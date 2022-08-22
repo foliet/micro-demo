@@ -32,11 +32,12 @@ func (l *QuerySubscribeLogic) QuerySubscribe(req *types.QuerySubscribeRequest) (
 	if err != nil {
 		return nil, err
 	}
-	result, err := l.svcCtx.PriceRpc.QuerySubscribe(l.ctx, &price.Subscribe{
-		UserId: userId,
-		ItemId: req.ItemId,
-		ShopId: req.ShopId,
-	})
+	result, err := l.svcCtx.PriceRpc.QuerySubscribe(l.ctx, &price.QuerySubscribeRequest{
+		Subscribe: &price.Subscribe{
+			UserId: userId,
+			ItemId: req.ItemId,
+			ShopId: req.ShopId,
+		}})
 	if err != nil {
 		return nil, err
 	}

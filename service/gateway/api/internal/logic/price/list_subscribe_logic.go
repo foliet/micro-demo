@@ -25,14 +25,17 @@ func NewListSubscribeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Lis
 	}
 }
 
-func (l *ListSubscribeLogic) ListSubscribe() (resp *types.ListSubscribeResponse, err error) {
+func (l *ListSubscribeLogic) ListSubscribe(req *types.ListSubscribeRequest) (resp *types.ListSubscribeResponse, err error) {
 	resp = new(types.ListSubscribeResponse)
 	resp.Subscribes = make([]*types.Subscribe, 0, 4)
 	userId, err := l.ctx.Value("userId").(json.Number).Int64()
 	if err != nil {
 		return nil, err
 	}
-	result, err := l.svcCtx.PriceRpc.ListSubscribe(l.ctx, &price.UserId{Id: userId})
+	result, err := l.svcCtx.PriceRpc.ListSubscribe(l.ctx, &price.ListSubscribeRequest{
+		UserId: userId,
+		Page:   req.Page,
+	})
 	if err != nil {
 		return nil, err
 	}

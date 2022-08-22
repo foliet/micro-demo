@@ -29,18 +29,21 @@ func NewAddSubscribeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddS
 }
 
 func (l *AddSubscribeLogic) AddSubscribe(req *types.AddSubscribeRequest) (resp *types.CodeResponse, err error) {
+	resp = new(types.CodeResponse)
 	userId, err := l.ctx.Value("userId").(json.Number).Int64()
 	if err != nil {
 		return nil, err
 	}
-	subscribe := &price.Subscribe{
-		UserId: userId,
+	request := &price.AddSubscribeRequest{
+		Subscribe: &price.Subscribe{
+			UserId: userId,
+		},
 	}
-	subscribe.ItemId, subscribe.ShopId, err = l.parseUrl(req.Url)
+	request.Subscribe.ItemId, request.Subscribe.ShopId, err = l.parseUrl(req.Url)
 	if err != nil {
 		return nil, err
 	}
-	_, err = l.svcCtx.PriceRpc.AddSubscribe(l.ctx, subscribe)
+	_, err = l.svcCtx.PriceRpc.AddSubscribe(l.ctx, request)
 	if err != nil {
 		return nil, err
 	}

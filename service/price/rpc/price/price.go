@@ -13,17 +13,19 @@ import (
 )
 
 type (
-	Empty      = pb.Empty
-	ItemInfo   = pb.ItemInfo
-	ItemInfos  = pb.ItemInfos
-	Subscribe  = pb.Subscribe
-	Subscribes = pb.Subscribes
-	UserId     = pb.UserId
+	AddSubscribeRequest    = pb.AddSubscribeRequest
+	Empty                  = pb.Empty
+	ItemInfo               = pb.ItemInfo
+	ListSubscribeRequest   = pb.ListSubscribeRequest
+	ListSubscribeResponse  = pb.ListSubscribeResponse
+	QuerySubscribeRequest  = pb.QuerySubscribeRequest
+	QuerySubscribeResponse = pb.QuerySubscribeResponse
+	Subscribe              = pb.Subscribe
 
 	Price interface {
-		AddSubscribe(ctx context.Context, in *Subscribe, opts ...grpc.CallOption) (*Empty, error)
-		ListSubscribe(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*Subscribes, error)
-		QuerySubscribe(ctx context.Context, in *Subscribe, opts ...grpc.CallOption) (*ItemInfos, error)
+		AddSubscribe(ctx context.Context, in *AddSubscribeRequest, opts ...grpc.CallOption) (*Empty, error)
+		ListSubscribe(ctx context.Context, in *ListSubscribeRequest, opts ...grpc.CallOption) (*ListSubscribeResponse, error)
+		QuerySubscribe(ctx context.Context, in *QuerySubscribeRequest, opts ...grpc.CallOption) (*QuerySubscribeResponse, error)
 	}
 
 	defaultPrice struct {
@@ -37,17 +39,17 @@ func NewPrice(cli zrpc.Client) Price {
 	}
 }
 
-func (m *defaultPrice) AddSubscribe(ctx context.Context, in *Subscribe, opts ...grpc.CallOption) (*Empty, error) {
+func (m *defaultPrice) AddSubscribe(ctx context.Context, in *AddSubscribeRequest, opts ...grpc.CallOption) (*Empty, error) {
 	client := pb.NewPriceClient(m.cli.Conn())
 	return client.AddSubscribe(ctx, in, opts...)
 }
 
-func (m *defaultPrice) ListSubscribe(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*Subscribes, error) {
+func (m *defaultPrice) ListSubscribe(ctx context.Context, in *ListSubscribeRequest, opts ...grpc.CallOption) (*ListSubscribeResponse, error) {
 	client := pb.NewPriceClient(m.cli.Conn())
 	return client.ListSubscribe(ctx, in, opts...)
 }
 
-func (m *defaultPrice) QuerySubscribe(ctx context.Context, in *Subscribe, opts ...grpc.CallOption) (*ItemInfos, error) {
+func (m *defaultPrice) QuerySubscribe(ctx context.Context, in *QuerySubscribeRequest, opts ...grpc.CallOption) (*QuerySubscribeResponse, error) {
 	client := pb.NewPriceClient(m.cli.Conn())
 	return client.QuerySubscribe(ctx, in, opts...)
 }

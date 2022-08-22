@@ -26,13 +26,14 @@ func NewAddSubscribeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddS
 	}
 }
 
-func (l *AddSubscribeLogic) AddSubscribe(in *pb.Subscribe) (*pb.Empty, error) {
+func (l *AddSubscribeLogic) AddSubscribe(in *pb.AddSubscribeRequest) (*pb.Empty, error) {
 	_, err := l.svcCtx.SubscribeModel.Insert(l.ctx, &sql.Subscribe{
-		UserId: in.UserId,
-		ItemId: in.ItemId,
-		ShopId: in.ShopId,
+		UserId: in.Subscribe.UserId,
+		ItemId: in.Subscribe.ItemId,
+		ShopId: in.Subscribe.ShopId,
 	})
 	switch e := err.(type) {
+	case nil:
 	case *mysql.MySQLError:
 		if e.Number == 1062 {
 			return nil, errorx.ErrDuplicateSubscribe

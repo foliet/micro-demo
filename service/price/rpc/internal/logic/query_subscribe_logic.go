@@ -23,8 +23,8 @@ func NewQuerySubscribeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Qu
 	}
 }
 
-func (l *QuerySubscribeLogic) QuerySubscribe(in *pb.Subscribe) (*pb.ItemInfos, error) {
-	result, err := l.svcCtx.ItemInfoModel.FindAllByUserIdAndItemId(l.ctx, in.UserId, in.ItemId)
+func (l *QuerySubscribeLogic) QuerySubscribe(in *pb.QuerySubscribeRequest) (*pb.QuerySubscribeResponse, error) {
+	result, err := l.svcCtx.ItemInfoModel.FindAllByUserIdAndItemId(l.ctx, in.Page, in.Subscribe.UserId, in.Subscribe.ItemId)
 	if err != nil {
 		return nil, err
 	}
@@ -36,5 +36,5 @@ func (l *QuerySubscribeLogic) QuerySubscribe(in *pb.Subscribe) (*pb.ItemInfos, e
 			CreateAt: elm.CreateAt.UnixMilli(),
 		})
 	}
-	return &pb.ItemInfos{ItemInfos: itemInfos}, nil
+	return &pb.QuerySubscribeResponse{ItemInfos: itemInfos}, nil
 }

@@ -46,11 +46,16 @@ type AddSubscribeRequest struct {
 
 type QuerySubscribeRequest struct {
 	Subscribe
+	Page int64 `form:"page,default=0"`
 }
 
 type QuerySubscribeResponse struct {
 	CodeResponse
 	ItemInfos []*ItemInfo `json:"itemInfos"`
+}
+
+type ListSubscribeRequest struct {
+	Page int64 `form:"page,default=0"`
 }
 
 type ListSubscribeResponse struct {

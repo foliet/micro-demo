@@ -14,11 +14,12 @@ type (
 	// and implement the added methods in customSubscribeModel.
 	SubscribeModel interface {
 		subscribeModel
-		FindAllByUserId(ctx context.Context, userId int64) ([]*Subscribe, error)
+		FindAllByUserId(ctx context.Context, page int64, userId int64) ([]*Subscribe, error)
 	}
 
 	customSubscribeModel struct {
 		*defaultSubscribeModel
+		pageSize int64
 	}
 )
 
@@ -26,11 +27,12 @@ type (
 func NewSubscribeModel(conn sqlx.SqlConn) SubscribeModel {
 	return &customSubscribeModel{
 		defaultSubscribeModel: newSubscribeModel(conn),
+		pageSize:              20,
 	}
 }
 
-func (m *customSubscribeModel) FindAllByUserId(ctx context.Context, userId int64) ([]*Subscribe, error) {
-	query := fmt.Sprintf("select %s from %s where `user_id` = ?", subscribeRows, m.table)
+func (m *customSubscribeModel) FindAllByUserId(ctx context.Context, page int64, userId int64) ([]*Subscribe, error) {
+	query := fmt.Sprintf("select %s from %s where `user_id` = ? limit %d offset %d", subscribeRows, m.table, m.pageSize, m.pageSize*page)
 	var resp []*Subscribe
 	err := m.conn.QueryRowsCtx(ctx, &resp, query, userId)
 	switch err {
@@ -57,8 +59,8 @@ func (m *customSubscribeModel) FindUniqueItemId(ctx context.Context) ([]int64, e
 	}
 }
 
-func (m *customSubscribeModel) FindUniqueItemIdByUserId(ctx context.Context, userId int64) ([]int64, error) {
-	query := fmt.Sprintf("select distinct `item_id` from %s where `user_id` = ?", m.table)
+func (m *customSubscribeModel) FindUniqueItemIdByUserId(ctx context.Context, page int64, userId int64) ([]int64, error) {
+	query := fmt.Sprintf("select distinct `item_id` from %s where `user_id` = ? limit %d offset %d", m.table, m.pageSize, m.pageSize*page)
 	var resp []int64
 	err := m.conn.QueryRowsCtx(ctx, &resp, query, userId)
 	switch err {

@@ -22,17 +22,17 @@ func NewPriceServer(svcCtx *svc.ServiceContext) *PriceServer {
 	}
 }
 
-func (s *PriceServer) AddSubscribe(ctx context.Context, in *pb.Subscribe) (*pb.Empty, error) {
+func (s *PriceServer) AddSubscribe(ctx context.Context, in *pb.AddSubscribeRequest) (*pb.Empty, error) {
 	l := logic.NewAddSubscribeLogic(ctx, s.svcCtx)
 	return l.AddSubscribe(in)
 }
 
-func (s *PriceServer) ListSubscribe(ctx context.Context, in *pb.UserId) (*pb.Subscribes, error) {
+func (s *PriceServer) ListSubscribe(ctx context.Context, in *pb.ListSubscribeRequest) (*pb.ListSubscribeResponse, error) {
 	l := logic.NewListSubscribeLogic(ctx, s.svcCtx)
 	return l.ListSubscribe(in)
 }
 
-func (s *PriceServer) QuerySubscribe(ctx context.Context, in *pb.Subscribe) (*pb.ItemInfos, error) {
+func (s *PriceServer) QuerySubscribe(ctx context.Context, in *pb.QuerySubscribeRequest) (*pb.QuerySubscribeResponse, error) {
 	l := logic.NewQuerySubscribeLogic(ctx, s.svcCtx)
 	return l.QuerySubscribe(in)
 }

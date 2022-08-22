@@ -23,8 +23,8 @@ func NewListSubscribeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Lis
 	}
 }
 
-func (l *ListSubscribeLogic) ListSubscribe(in *pb.UserId) (*pb.Subscribes, error) {
-	result, err := l.svcCtx.SubscribeModel.FindAllByUserId(l.ctx, in.Id)
+func (l *ListSubscribeLogic) ListSubscribe(in *pb.ListSubscribeRequest) (*pb.ListSubscribeResponse, error) {
+	result, err := l.svcCtx.SubscribeModel.FindAllByUserId(l.ctx, in.Page, in.UserId)
 	if err != nil {
 		return nil, err
 	}
@@ -36,5 +36,5 @@ func (l *ListSubscribeLogic) ListSubscribe(in *pb.UserId) (*pb.Subscribes, error
 			ShopId: elm.ShopId,
 		})
 	}
-	return &pb.Subscribes{Subscribes: subscribes}, nil
+	return &pb.ListSubscribeResponse{Subscribes: subscribes}, nil
 }

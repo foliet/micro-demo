@@ -10,16 +10,21 @@ type ItemInfo {
 }
 
 type AddSubscribeRequest {
-    url string `json:"url"`
+    Url string `json:"url"`
 }
 
 type QuerySubscribeRequest {
     Subscribe
+    Page int64 `form:"page,default=0"`
 }
 
 type QuerySubscribeResponse {
     CodeResponse
     ItemInfos []*ItemInfo `json:"itemInfos"`
+}
+
+type ListSubscribeRequest {
+    Page int64 `form:"page,default=0"`
 }
 
 type ListSubscribeResponse {
@@ -37,5 +42,5 @@ service gateway {
     @handler querySubscribe
     get /query_subscribe (QuerySubscribeRequest) returns (QuerySubscribeResponse)
     @handler listSubscribe
-    get /list_subscribe returns (ListSubscribeResponse)
+    get /list_subscribe (ListSubscribeRequest) returns (ListSubscribeResponse)
 }

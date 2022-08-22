@@ -1,7 +1,7 @@
 package svc
 
 import (
-	"demo/service/price/cronjob/internal/config"
+	"demo/service/price/cron/internal/config"
 	"demo/service/price/model/sql"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )

@@ -1,2 +1,3 @@
+Name: price.cron
 Mysql:
   Datasource: demo:Demo1234@tcp(sh-cynosdbmysql-grp-ifioqjko.sql.tencentcdb.com:29987)/demo?parseTime=true

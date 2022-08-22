@@ -2,7 +2,7 @@ package logic
 
 import (
 	"context"
-	"demo/service/price/cronjob/internal/svc"
+	"demo/service/price/cron/internal/svc"
 	"demo/service/price/model/sql"
 	"encoding/json"
 	"errors"

@@ -2,8 +2,8 @@ package schedule
 
 import (
 	"context"
-	"demo/service/price/cronjob/internal/logic"
-	"demo/service/price/cronjob/internal/svc"
+	"demo/service/price/cron/internal/logic"
+	"demo/service/price/cron/internal/svc"
 	"github.com/robfig/cron"
 	"log"
 )

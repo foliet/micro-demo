@@ -4,7 +4,7 @@ type LoginRequest {
 }
 
 type LoginResponse {
-    ResponseStatus
+    CodeResponse
     AccessToken string `json:"accessToken"`
     AccessExpire int64 `json:"accessExpire"`
 }
@@ -16,7 +16,7 @@ type RegisterRequest {
 }
 
 type RegisterResponse {
-    ResponseStatus
+    CodeResponse
     AccessToken string `json:"accessToken"`
     AccessExpire int64 `json:"accessExpire"`
 }

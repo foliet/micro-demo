@@ -4,27 +4,29 @@ import (
 	"context"
 	"demo/common/errorx"
 	"demo/service/price/model/sql"
+	"github.com/go-sql-driver/mysql"
+
 	"demo/service/price/rpc/internal/svc"
 	"demo/service/price/rpc/pb"
-	"github.com/go-sql-driver/mysql"
+
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type SubscribeLogic struct {
+type AddSubscribeLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewSubscribeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SubscribeLogic {
-	return &SubscribeLogic{
+func NewAddSubscribeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddSubscribeLogic {
+	return &AddSubscribeLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *SubscribeLogic) Subscribe(in *pb.SubscribeRequest) (*pb.Empty, error) {
+func (l *AddSubscribeLogic) AddSubscribe(in *pb.Subscribe) (*pb.Empty, error) {
 	_, err := l.svcCtx.SubscribeModel.Insert(l.ctx, &sql.Subscribe{
 		UserId: in.UserId,
 		ItemId: in.ItemId,

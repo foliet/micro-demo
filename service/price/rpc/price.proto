@@ -10,10 +10,14 @@ message UserId {
   int64 Id = 1;
 }
 
-message SubscribeRequest {
+message Subscribe {
   int64 UserId = 1;
   int64 ItemId = 2;
   int64 ShopId = 3;
+}
+
+message Subscribes {
+  repeated Subscribe Subscribes = 1;
 }
 
 message ItemInfo {
@@ -27,6 +31,7 @@ message ItemInfos {
 }
 
 service Price {
-  rpc subscribe(SubscribeRequest) returns (Empty);
-  rpc itemInfo(UserId) returns (ItemInfos);
+  rpc addSubscribe(Subscribe) returns (Empty);
+  rpc listSubscribe(UserId) returns (Subscribes);
+  rpc querySubscribe(Subscribe) returns (ItemInfos);
 }

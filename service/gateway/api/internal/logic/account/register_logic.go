@@ -2,8 +2,7 @@ package account
 
 import (
 	"context"
-	"demo/service/account/rpc/pb"
-
+	"demo/service/account/rpc/account"
 	"demo/service/gateway/api/internal/svc"
 	"demo/service/gateway/api/internal/types"
 
@@ -26,7 +25,7 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 
 func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.RegisterResponse, err error) {
 	resp = new(types.RegisterResponse)
-	rpcResp, err := l.svcCtx.AccountRpc.Register(l.ctx, &pb.RegisterRequest{
+	rpcResp, err := l.svcCtx.AccountRpc.Register(l.ctx, &account.RegisterRequest{
 		Name:     req.Name,
 		Password: req.Password,
 		Code:     req.Code,

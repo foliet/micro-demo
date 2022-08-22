@@ -36,7 +36,7 @@ func main() {
 			return http.StatusInternalServerError, nil
 		}
 		statusError = status.Convert(err)
-		return http.StatusOK, &types.ResponseStatus{
+		return http.StatusOK, &types.CodeResponse{
 			Code: int64(statusError.Code()),
 			Msg:  statusError.Message(),
 		}

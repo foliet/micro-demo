@@ -8,12 +8,10 @@ info(
 	version: "type version here"
 )
 
-type ResponseStatus {
+type CodeResponse {
 	Code int64  `json:"code,default=0"`
 	Msg  string `json:"msg,default=''"`
 }
-
-type Empty {}
 
 import (
 	"doc/account/account.api"

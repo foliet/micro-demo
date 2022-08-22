@@ -1,4 +1,4 @@
-type SubscribeRequest {
+type Subscribe {
     ItemId int64 `json:"itemId"`
     ShopId int64 `json:"shopId"`
 }
@@ -9,9 +9,21 @@ type ItemInfo {
     Price   float64 `json:"price"`
 }
 
-type ItemInfoResponse {
-    ResponseStatus
+type AddSubscribeRequest {
+    url string `json:"url"`
+}
+
+type QuerySubscribeRequest {
+    Subscribe
+}
+
+type QuerySubscribeResponse {
+    CodeResponse
     ItemInfos []*ItemInfo `json:"itemInfos"`
+}
+
+type ListSubscribeResponse {
+    Subscribes []*Subscribe `json:"subscribes"`
 }
 
 @server (
@@ -20,8 +32,10 @@ type ItemInfoResponse {
     prefix: /api/price
 )
 service gateway {
-    @handler subscribe
-    post /subscribe (SubscribeRequest) returns (ResponseStatus)
-    @handler itemInfo
-    get /iteminfo returns (ItemInfoResponse)
+    @handler addSubscribe
+    post /add_subscribe (AddSubscribeRequest) returns (CodeResponse)
+    @handler querySubscribe
+    get /query_subscribe (QuerySubscribeRequest) returns (QuerySubscribeResponse)
+    @handler listSubscribe
+    get /list_subscribe returns (ListSubscribeResponse)
 }

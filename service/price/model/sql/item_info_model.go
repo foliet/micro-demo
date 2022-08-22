@@ -14,7 +14,7 @@ type (
 	// and implement the added methods in customItemInfoModel.
 	ItemInfoModel interface {
 		itemInfoModel
-		FindAllByUserId(ctx context.Context, userId int64) ([]*ItemInfo, error)
+		FindAllByUserIdAndItemId(ctx context.Context, userId int64, itemId int64) ([]*ItemInfo, error)
 	}
 
 	customItemInfoModel struct {
@@ -29,10 +29,10 @@ func NewItemInfoModel(conn sqlx.SqlConn) ItemInfoModel {
 	}
 }
 
-func (m *customItemInfoModel) FindAllByUserId(ctx context.Context, userId int64) ([]*ItemInfo, error) {
-	query := fmt.Sprintf("select %s from (select `item_id` from `subscribe` where `user_id` = ?) as subscribe natural join item_info", itemInfoRows)
+func (m *customItemInfoModel) FindAllByUserIdAndItemId(ctx context.Context, userId int64, itemId int64) ([]*ItemInfo, error) {
+	query := fmt.Sprintf("select %s from item_info where `user_id` = ? and `item_id` = ?", itemInfoRows)
 	var resp []*ItemInfo
-	err := m.conn.QueryRowsCtx(ctx, &resp, query, userId)
+	err := m.conn.QueryRowsCtx(ctx, &resp, query, userId, itemId)
 	switch err {
 	case nil:
 		return resp, nil

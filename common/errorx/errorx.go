@@ -12,6 +12,7 @@ var (
 	ErrUsernameNotFound   = NewCodeError(1003, "username not found")
 	ErrDuplicateUsername  = NewCodeError(1004, "username had been registered")
 	ErrDuplicateSubscribe = NewCodeError(1005, "item had been subscribed by the same user")
+	ErrWrongUrlFormat     = NewCodeError(1006, "wrong url format")
 )
 
 func NewDefaultError(msg string) error {

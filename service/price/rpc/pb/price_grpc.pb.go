@@ -22,8 +22,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PriceClient interface {
-	Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (*Empty, error)
-	ItemInfo(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*ItemInfos, error)
+	AddSubscribe(ctx context.Context, in *Subscribe, opts ...grpc.CallOption) (*Empty, error)
+	ListSubscribe(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*Subscribes, error)
+	QuerySubscribe(ctx context.Context, in *Subscribe, opts ...grpc.CallOption) (*ItemInfos, error)
 }
 
 type priceClient struct {
@@ -34,18 +35,27 @@ func NewPriceClient(cc grpc.ClientConnInterface) PriceClient {
 	return &priceClient{cc}
 }
 
-func (c *priceClient) Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (*Empty, error) {
+func (c *priceClient) AddSubscribe(ctx context.Context, in *Subscribe, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/price.Price/subscribe", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/price.Price/addSubscribe", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *priceClient) ItemInfo(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*ItemInfos, error) {
+func (c *priceClient) ListSubscribe(ctx context.Context, in *UserId, opts ...grpc.CallOption) (*Subscribes, error) {
+	out := new(Subscribes)
+	err := c.cc.Invoke(ctx, "/price.Price/listSubscribe", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *priceClient) QuerySubscribe(ctx context.Context, in *Subscribe, opts ...grpc.CallOption) (*ItemInfos, error) {
 	out := new(ItemInfos)
-	err := c.cc.Invoke(ctx, "/price.Price/itemInfo", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/price.Price/querySubscribe", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -56,8 +66,9 @@ func (c *priceClient) ItemInfo(ctx context.Context, in *UserId, opts ...grpc.Cal
 // All implementations must embed UnimplementedPriceServer
 // for forward compatibility
 type PriceServer interface {
-	Subscribe(context.Context, *SubscribeRequest) (*Empty, error)
-	ItemInfo(context.Context, *UserId) (*ItemInfos, error)
+	AddSubscribe(context.Context, *Subscribe) (*Empty, error)
+	ListSubscribe(context.Context, *UserId) (*Subscribes, error)
+	QuerySubscribe(context.Context, *Subscribe) (*ItemInfos, error)
 	mustEmbedUnimplementedPriceServer()
 }
 
@@ -65,11 +76,14 @@ type PriceServer interface {
 type UnimplementedPriceServer struct {
 }
 
-func (UnimplementedPriceServer) Subscribe(context.Context, *SubscribeRequest) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+func (UnimplementedPriceServer) AddSubscribe(context.Context, *Subscribe) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddSubscribe not implemented")
 }
-func (UnimplementedPriceServer) ItemInfo(context.Context, *UserId) (*ItemInfos, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ItemInfo not implemented")
+func (UnimplementedPriceServer) ListSubscribe(context.Context, *UserId) (*Subscribes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListSubscribe not implemented")
+}
+func (UnimplementedPriceServer) QuerySubscribe(context.Context, *Subscribe) (*ItemInfos, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QuerySubscribe not implemented")
 }
 func (UnimplementedPriceServer) mustEmbedUnimplementedPriceServer() {}
 
@@ -84,38 +98,56 @@ func RegisterPriceServer(s grpc.ServiceRegistrar, srv PriceServer) {
 	s.RegisterService(&Price_ServiceDesc, srv)
 }
 
-func _Price_Subscribe_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SubscribeRequest)
+func _Price_AddSubscribe_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Subscribe)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PriceServer).Subscribe(ctx, in)
+		return srv.(PriceServer).AddSubscribe(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/price.Price/subscribe",
+		FullMethod: "/price.Price/addSubscribe",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PriceServer).Subscribe(ctx, req.(*SubscribeRequest))
+		return srv.(PriceServer).AddSubscribe(ctx, req.(*Subscribe))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Price_ItemInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Price_ListSubscribe_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UserId)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PriceServer).ItemInfo(ctx, in)
+		return srv.(PriceServer).ListSubscribe(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/price.Price/itemInfo",
+		FullMethod: "/price.Price/listSubscribe",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PriceServer).ItemInfo(ctx, req.(*UserId))
+		return srv.(PriceServer).ListSubscribe(ctx, req.(*UserId))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Price_QuerySubscribe_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Subscribe)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PriceServer).QuerySubscribe(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/price.Price/querySubscribe",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PriceServer).QuerySubscribe(ctx, req.(*Subscribe))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -128,12 +160,16 @@ var Price_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*PriceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "subscribe",
-			Handler:    _Price_Subscribe_Handler,
+			MethodName: "addSubscribe",
+			Handler:    _Price_AddSubscribe_Handler,
 		},
 		{
-			MethodName: "itemInfo",
-			Handler:    _Price_ItemInfo_Handler,
+			MethodName: "listSubscribe",
+			Handler:    _Price_ListSubscribe_Handler,
+		},
+		{
+			MethodName: "querySubscribe",
+			Handler:    _Price_QuerySubscribe_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

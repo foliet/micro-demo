@@ -9,20 +9,20 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func SubscribeHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func AddSubscribeHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.SubscribeRequest
+		var req types.AddSubscribeRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
 		}
 
-		l := price.NewSubscribeLogic(r.Context(), svcCtx)
-		err := l.Subscribe(&req)
+		l := price.NewAddSubscribeLogic(r.Context(), svcCtx)
+		resp, err := l.AddSubscribe(&req)
 		if err != nil {
 			httpx.Error(w, err)
 		} else {
-			httpx.Ok(w)
+			httpx.OkJson(w, resp)
 		}
 	}
 }

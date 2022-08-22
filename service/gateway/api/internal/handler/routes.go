@@ -32,13 +32,18 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/subscribe",
-				Handler: price.SubscribeHandler(serverCtx),
+				Path:    "/add_subscribe",
+				Handler: price.AddSubscribeHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/iteminfo",
-				Handler: price.ItemInfoHandler(serverCtx),
+				Path:    "/query_subscribe",
+				Handler: price.QuerySubscribeHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/list_subscribe",
+				Handler: price.ListSubscribeHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),

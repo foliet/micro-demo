@@ -32,6 +32,7 @@ func (l *RegisterLogic) Register(in *pb.RegisterRequest) (*pb.UserId, error) {
 		Password: string(hashPassword),
 	})
 	switch e := err.(type) {
+	case nil:
 	case *mysql.MySQLError:
 		if e.Number == 1062 {
 			return nil, errorx.ErrDuplicateUsername

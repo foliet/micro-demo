@@ -12,7 +12,6 @@ type LoginResponse {
 type RegisterRequest {
     Name string `json:"name"`
     Password string `json:"password"`
-    Code string `json:"code"`
 }
 
 type RegisterResponse {

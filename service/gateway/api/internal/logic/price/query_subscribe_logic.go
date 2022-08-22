@@ -37,7 +37,9 @@ func (l *QuerySubscribeLogic) QuerySubscribe(req *types.QuerySubscribeRequest) (
 			UserId: userId,
 			ItemId: req.ItemId,
 			ShopId: req.ShopId,
-		}})
+		},
+		Page: req.Page,
+	})
 	if err != nil {
 		return nil, err
 	}

@@ -14,7 +14,8 @@ type AddSubscribeRequest {
 }
 
 type QuerySubscribeRequest {
-    Subscribe
+    ItemId int64 `form:"itemId"`
+    ShopId int64 `form:"shopId"`
     Page int64 `form:"page,default=0"`
 }
 

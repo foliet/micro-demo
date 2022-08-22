@@ -20,7 +20,6 @@ type LoginResponse struct {
 type RegisterRequest struct {
 	Name     string `json:"name"`
 	Password string `json:"password"`
-	Code     string `json:"code"`
 }
 
 type RegisterResponse struct {
@@ -45,8 +44,9 @@ type AddSubscribeRequest struct {
 }
 
 type QuerySubscribeRequest struct {
-	Subscribe
-	Page int64 `form:"page,default=0"`
+	ItemId int64 `form:"itemId"`
+	ShopId int64 `form:"shopId"`
+	Page   int64 `form:"page,default=0"`
 }
 
 type QuerySubscribeResponse struct {

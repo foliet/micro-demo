@@ -28,7 +28,6 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.Regist
 	rpcResp, err := l.svcCtx.AccountRpc.Register(l.ctx, &account.RegisterRequest{
 		Name:     req.Name,
 		Password: req.Password,
-		Code:     req.Code,
 	})
 	if err != nil {
 		return nil, err

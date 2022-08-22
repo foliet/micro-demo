@@ -5,6 +5,7 @@ import (
 	"demo/service/price/cronjob/internal/svc"
 	"demo/service/price/model/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
 	"io"
@@ -33,21 +34,24 @@ func (l *ShopeeScraperLogic) Run() {
 	scraped := make(map[int64]bool, 16)
 	for _, elm := range result {
 		if !scraped[elm.ItemId] {
-			l.scrape(elm.ShopId, elm.ItemId)
+			err = l.scrape(elm.ShopId, elm.ItemId)
+			if err != nil {
+				l.Logger.Error(err)
+			}
 		}
 		scraped[elm.ItemId] = true
 	}
 }
 
-func (l *ShopeeScraperLogic) scrape(shopId, itemId int64) {
+func (l *ShopeeScraperLogic) scrape(shopId, itemId int64) error {
 	url := fmt.Sprintf("https://shopee.sg/api/v4/item/get?shopid=%d&itemid=%d", shopId, itemId)
 	resp, err := http.Get(url)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	body := &struct {
 		Data struct {
@@ -58,17 +62,17 @@ func (l *ShopeeScraperLogic) scrape(shopId, itemId int64) {
 	}{}
 	err = json.Unmarshal(respBody, body)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	if body.Error != 0 {
-		l.Logger.Error("shopee response error: " + body.ErrorMsg)
-		return
+		return errors.New("shopee response error: " + body.ErrorMsg)
 	}
 	_, err = l.svcCtx.ItemInfoModel.Insert(l.ctx, &sql.ItemInfo{
 		ItemId: itemId,
 		Price:  body.Data.Price / 100000,
 	})
 	if err != nil {
-		panic(err)
+		return err
 	}
+	return nil
 }

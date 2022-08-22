@@ -39,7 +39,7 @@ func (l *AddSubscribeLogic) AddSubscribe(req *types.AddSubscribeRequest) (resp *
 			UserId: userId,
 		},
 	}
-	request.Subscribe.ItemId, request.Subscribe.ShopId, err = l.parseUrl(req.Url)
+	request.Subscribe.ShopId, request.Subscribe.ItemId, err = l.parseUrl(req.Url)
 	if err != nil {
 		return nil, err
 	}

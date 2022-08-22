@@ -15,6 +15,7 @@ type (
 	SubscribeModel interface {
 		subscribeModel
 		FindAllByUserId(ctx context.Context, page int64, userId int64) ([]*Subscribe, error)
+		FindAllWithDistinctItemId(ctx context.Context) ([]*Subscribe, error)
 	}
 
 	customSubscribeModel struct {
@@ -45,24 +46,10 @@ func (m *customSubscribeModel) FindAllByUserId(ctx context.Context, page int64, 
 	}
 }
 
-func (m *customSubscribeModel) FindUniqueItemId(ctx context.Context) ([]int64, error) {
-	query := fmt.Sprintf("select distinct `item_id` from %s", m.table)
-	var resp []int64
+func (m *customSubscribeModel) FindAllWithDistinctItemId(ctx context.Context) ([]*Subscribe, error) {
+	query := fmt.Sprintf("select %s from %s", subscribeRows, m.table)
+	var resp []*Subscribe
 	err := m.conn.QueryRowsCtx(ctx, &resp, query)
-	switch err {
-	case nil:
-		return resp, nil
-	case sqlc.ErrNotFound:
-		return nil, ErrNotFound
-	default:
-		return nil, err
-	}
-}
-
-func (m *customSubscribeModel) FindUniqueItemIdByUserId(ctx context.Context, page int64, userId int64) ([]int64, error) {
-	query := fmt.Sprintf("select distinct `item_id` from %s where `user_id` = ? limit %d offset %d", m.table, m.pageSize, m.pageSize*page)
-	var resp []int64
-	err := m.conn.QueryRowsCtx(ctx, &resp, query, userId)
 	switch err {
 	case nil:
 		return resp, nil

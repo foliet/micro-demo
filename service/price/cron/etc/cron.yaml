@@ -1,3 +1,8 @@
 Name: price.cron
 Mysql:
   Datasource: demo:Demo1234@tcp(sh-cynosdbmysql-grp-ifioqjko.sql.tencentcdb.com:29987)/demo?parseTime=true
+CacheRedis:
+  -
+    Host: 127.0.0.1:6379
+    Type: node
+    Pass: ~

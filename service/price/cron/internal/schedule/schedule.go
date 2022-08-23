@@ -16,5 +16,5 @@ func MustAddJob(runner *cron.Cron, spec string, job cron.Job) {
 }
 
 func RegisterSchedule(runner *cron.Cron, serverCtx *svc.ServiceContext) {
-	MustAddJob(runner, "*/10 * * * * ?", logic.NewShopeeScarperLogic(context.Background(), serverCtx))
+	MustAddJob(runner, "0 0 * * * ?", logic.NewShopeeScarperLogic(context.Background(), serverCtx))
 }

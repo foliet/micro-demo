@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/zeromicro/go-zero/core/stores/builder"
+	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/core/stringx"
@@ -20,6 +21,8 @@ var (
 	itemInfoRows                = strings.Join(itemInfoFieldNames, ",")
 	itemInfoRowsExpectAutoSet   = strings.Join(stringx.Remove(itemInfoFieldNames, "`id`", "`create_time`", "`update_time`", "`create_at`", "`update_at`"), ",")
 	itemInfoRowsWithPlaceHolder = strings.Join(stringx.Remove(itemInfoFieldNames, "`id`", "`create_time`", "`update_time`", "`create_at`", "`update_at`"), "=?,") + "=?"
+
+	cacheDemoItemInfoIdPrefix = "cache:demo:itemInfo:id:"
 )
 
 type (
@@ -31,7 +34,7 @@ type (
 	}
 
 	defaultItemInfoModel struct {
-		conn  sqlx.SqlConn
+		sqlc.CachedConn
 		table string
 	}
 
@@ -43,23 +46,29 @@ type (
 	}
 )
 
-func newItemInfoModel(conn sqlx.SqlConn) *defaultItemInfoModel {
+func newItemInfoModel(conn sqlx.SqlConn, c cache.CacheConf) *defaultItemInfoModel {
 	return &defaultItemInfoModel{
-		conn:  conn,
-		table: "`item_info`",
+		CachedConn: sqlc.NewConn(conn, c),
+		table:      "`item_info`",
 	}
 }
 
 func (m *defaultItemInfoModel) Delete(ctx context.Context, id int64) error {
-	query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
-	_, err := m.conn.ExecCtx(ctx, query, id)
+	demoItemInfoIdKey := fmt.Sprintf("%s%v", cacheDemoItemInfoIdPrefix, id)
+	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
+		return conn.ExecCtx(ctx, query, id)
+	}, demoItemInfoIdKey)
 	return err
 }
 
 func (m *defaultItemInfoModel) FindOne(ctx context.Context, id int64) (*ItemInfo, error) {
-	query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", itemInfoRows, m.table)
+	demoItemInfoIdKey := fmt.Sprintf("%s%v", cacheDemoItemInfoIdPrefix, id)
 	var resp ItemInfo
-	err := m.conn.QueryRowCtx(ctx, &resp, query, id)
+	err := m.QueryRowCtx(ctx, &resp, demoItemInfoIdKey, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) error {
+		query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", itemInfoRows, m.table)
+		return conn.QueryRowCtx(ctx, v, query, id)
+	})
 	switch err {
 	case nil:
 		return &resp, nil
@@ -71,15 +80,30 @@ func (m *defaultItemInfoModel) FindOne(ctx context.Context, id int64) (*ItemInfo
 }
 
 func (m *defaultItemInfoModel) Insert(ctx context.Context, data *ItemInfo) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?)", m.table, itemInfoRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.ItemId, data.Price)
+	demoItemInfoIdKey := fmt.Sprintf("%s%v", cacheDemoItemInfoIdPrefix, data.Id)
+	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?)", m.table, itemInfoRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.ItemId, data.Price)
+	}, demoItemInfoIdKey)
 	return ret, err
 }
 
 func (m *defaultItemInfoModel) Update(ctx context.Context, data *ItemInfo) error {
-	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, itemInfoRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, data.ItemId, data.Price, data.Id)
+	demoItemInfoIdKey := fmt.Sprintf("%s%v", cacheDemoItemInfoIdPrefix, data.Id)
+	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, itemInfoRowsWithPlaceHolder)
+		return conn.ExecCtx(ctx, query, data.ItemId, data.Price, data.Id)
+	}, demoItemInfoIdKey)
 	return err
+}
+
+func (m *defaultItemInfoModel) formatPrimary(primary interface{}) string {
+	return fmt.Sprintf("%s%v", cacheDemoItemInfoIdPrefix, primary)
+}
+
+func (m *defaultItemInfoModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary interface{}) error {
+	query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", itemInfoRows, m.table)
+	return conn.QueryRowCtx(ctx, v, query, primary)
 }
 
 func (m *defaultItemInfoModel) tableName() string {

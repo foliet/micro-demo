@@ -3,6 +3,7 @@ package sql
 import (
 	"context"
 	"fmt"
+	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
@@ -25,9 +26,9 @@ type (
 )
 
 // NewSubscribeModel returns a model for the database table.
-func NewSubscribeModel(conn sqlx.SqlConn) SubscribeModel {
+func NewSubscribeModel(conn sqlx.SqlConn, c cache.CacheConf) SubscribeModel {
 	return &customSubscribeModel{
-		defaultSubscribeModel: newSubscribeModel(conn),
+		defaultSubscribeModel: newSubscribeModel(conn, c),
 		pageSize:              20,
 	}
 }
@@ -35,7 +36,7 @@ func NewSubscribeModel(conn sqlx.SqlConn) SubscribeModel {
 func (m *customSubscribeModel) FindAllByUserId(ctx context.Context, page int64, userId int64) ([]*Subscribe, error) {
 	query := fmt.Sprintf("select %s from %s where `user_id` = ? limit %d offset %d", subscribeRows, m.table, m.pageSize, m.pageSize*page)
 	var resp []*Subscribe
-	err := m.conn.QueryRowsCtx(ctx, &resp, query, userId)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, userId)
 	switch err {
 	case nil:
 		return resp, nil
@@ -49,7 +50,7 @@ func (m *customSubscribeModel) FindAllByUserId(ctx context.Context, page int64, 
 func (m *customSubscribeModel) FindAllWithDistinctItemId(ctx context.Context) ([]*Subscribe, error) {
 	query := fmt.Sprintf("select %s from %s", subscribeRows, m.table)
 	var resp []*Subscribe
-	err := m.conn.QueryRowsCtx(ctx, &resp, query)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query)
 	switch err {
 	case nil:
 		return resp, nil

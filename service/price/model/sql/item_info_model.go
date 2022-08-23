@@ -3,6 +3,7 @@ package sql
 import (
 	"context"
 	"fmt"
+	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
@@ -24,9 +25,9 @@ type (
 )
 
 // NewItemInfoModel returns a model for the database table.
-func NewItemInfoModel(conn sqlx.SqlConn) ItemInfoModel {
+func NewItemInfoModel(conn sqlx.SqlConn, c cache.CacheConf) ItemInfoModel {
 	return &customItemInfoModel{
-		defaultItemInfoModel: newItemInfoModel(conn),
+		defaultItemInfoModel: newItemInfoModel(conn, c),
 		pageSize:             20,
 	}
 }
@@ -34,7 +35,7 @@ func NewItemInfoModel(conn sqlx.SqlConn) ItemInfoModel {
 func (m *customItemInfoModel) FindAllByUserIdAndItemId(ctx context.Context, page int64, userId int64, itemId int64) ([]*ItemInfo, error) {
 	query := fmt.Sprintf("select %s from (select `item_id` from `subscribe` where `user_id` = ?) as subscribe natural join item_info where `item_id` = ? limit %d offset %d", itemInfoRows, m.pageSize, m.pageSize*page)
 	var resp []*ItemInfo
-	err := m.conn.QueryRowsCtx(ctx, &resp, query, userId, itemId)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, userId, itemId)
 	switch err {
 	case nil:
 		return resp, nil

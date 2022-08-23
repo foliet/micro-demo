@@ -15,6 +15,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	sqlConn := sqlx.NewMysql(c.Mysql.Datasource)
 	return &ServiceContext{
 		Config:    c,
-		UserModel: sql.NewUserModel(sqlConn),
+		UserModel: sql.NewUserModel(sqlConn, c.CacheRedis),
 	}
 }

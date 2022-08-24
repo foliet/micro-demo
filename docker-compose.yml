@@ -1,4 +1,4 @@
-version: "2"
+version: "3.7"
 services:
   redis:
     image: redis
@@ -13,24 +13,44 @@ services:
     environment:
       ETCD_ROOT_PASSWORD: root
   cron:
-    image: foliet/cron:v1
+    image: cron:v1
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 512M
     depends_on:
       - redis
   account:
-    image: foliet/account:v1
+    image: account:v1
     network_mode: host
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 512M
     depends_on:
       - etcd
       - redis
   price:
-    image: foliet/price:v1
+    image: price:v1
     network_mode: host
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 512M
     depends_on:
       - etcd
       - redis
   gateway:
-    image: foliet/gateway:v1
+    image: gateway:v1
     network_mode: host
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 512M
     depends_on:
       - etcd
       - redis

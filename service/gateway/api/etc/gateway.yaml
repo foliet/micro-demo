@@ -19,3 +19,7 @@ PriceRpc:
     Key: price.rpc
     User: root
     Pass: root
+Prometheus:
+  Host: 127.0.0.1
+  Port: 9089
+  Path: /metrics
